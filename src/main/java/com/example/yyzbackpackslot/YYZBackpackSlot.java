@@ -1,30 +1,40 @@
 package com.example.yyzbackpackslot;
 
+import eu.pb4.trinkets.api.TrinketsApi;
 import net.fabricmc.api.ModInitializer;
-
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+
 public class YYZBackpackSlot implements ModInitializer {
-	public static final String MOD_ID = "yyz-backpack-slot";
+    public static final String MOD_ID = "yyz-backpack-slot";
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	@Override
-	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+    private static final Set<Identifier> ALLOWED_BACKPACKS = Set.of(
+        Identifier.fromNamespaceAndPath("yyzsbackpack", "iron_backpack"),
+        Identifier.fromNamespaceAndPath("yyzsbackpack", "gold_backpack"),
+        Identifier.fromNamespaceAndPath("yyzsbackpack", "diamond_backpack"),
+        Identifier.fromNamespaceAndPath("yyzsbackpack", "netherite_backpack")
+    );
 
-		LOGGER.info("Hello Fabric world!");
-	}
+    @Override
+    public void onInitialize() {
+        TrinketsApi.registerTrinketPredicate(
+            id("backpacks_only"),
+            (stack, slot, entity) ->
+                ALLOWED_BACKPACKS.contains(
+                    BuiltInRegistries.ITEM.getKey(stack.getItem())
+                )
+        );
 
-	public static Identifier id(String path) {
-		return Identifier.fromNamespaceAndPath(MOD_ID, path);
-	}
+        LOGGER.info("YYZ Backpack Slot initialized");
+    }
+
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+    }
 }
