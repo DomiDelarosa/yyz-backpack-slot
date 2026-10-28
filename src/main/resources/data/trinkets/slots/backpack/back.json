@@ -1,0 +1,8 @@
+{
+  "icon": "trinkets:container/slots/chest",
+  "amount": 1,
+  "order": 0,
+  "validator_predicates": [
+    "trinkets:all"
+  ]
+}
